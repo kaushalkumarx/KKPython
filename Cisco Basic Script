@@ -1,0 +1,28 @@
+from netmiko import ConnectHandler
+
+cisco_IOL = {
+    'device_type': 'cisco_ios',
+    'ip': '192.168.174.175',
+    'username': 'cisco',
+    'password': 'cisco',
+    'port' : 22,          # optional, defaults to 22
+    'secret': 'cisco',     # optional, defaults to ''
+    'verbose': False,       # optional, defaults to False
+}
+net_connect = ConnectHandler (**cisco_IOL)
+output_IP = net_connect.send_command ('show ip int brief')
+output_arp = net_connect.send_command ('show arp')
+config_commands = [ 'logging buffered 20000',
+                    'logging buffered 20010',
+                    'no logging console' ]
+logging = net_connect.send_config_set(config_commands)
+config_commands1 = [ 'interface loopback123',
+		     'ip address 123.123.123.1 255.255.255.0',
+                     'no shutdown' ]
+Loopback = net_connect.send_config_set(config_commands1)
+Loopback_ping = net_connect.send_command ('ping 123.123.123.1')
+
+print(output_arp)
+print(logging)
+print(Loopback)
+print(Loopback_ping)
